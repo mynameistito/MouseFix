@@ -4,11 +4,11 @@ MouseFix is a Windows utility that filters repeated mouse input caused by switch
 
 ## Download and use
 
-1. Download the appropriate executable from the [original project's releases](https://github.com/matreshka15/MouseFix/releases): `MouseFix-x64.exe` for 64-bit Windows or `MouseFix-x86.exe` for 32-bit Windows.
+1. Download the appropriate executable from [this community fork's releases](https://github.com/mynameistito/MouseFix/releases): `MouseFix-x64.exe` for 64-bit Windows or `MouseFix-x86.exe` for 32-bit Windows. The ZIP includes both executables, the license, README, and startup helper.
 2. Run the executable and find the MouseFix icon in the system tray.
 3. Right-click the icon to enable or disable filtering for individual inputs, change thresholds, select a preset, or exit.
 
-Release binaries come from the original project and may differ from this checkout.
+These releases are built from this fork. The [original project's releases](https://github.com/matreshka15/MouseFix/releases) remain available separately.
 
 ### Presets
 
