@@ -16,6 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: microsoft/setup-msbuild@v2
+      - name: Check release tag matches application version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $versionLine = Select-String -Path MouseFix/version.h -Pattern '^#define APP_VERSION_STRING "([^"]+)"'
+          $version = $versionLine.Matches[0].Groups[1].Value
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'Release tag must match APP_VERSION_STRING' }
       - name: Build x64 and x86
         shell: pwsh
         run: |
@@ -31,12 +38,14 @@ jobs:
           Copy-Item MouseFix/bin/x86/Release/MouseFix-x86.exe dist/
           Copy-Item LICENSE,README.md,add_to_startup.ps1 dist/
           Compress-Archive -Path dist/* -DestinationPath MouseFix-Windows.zip
+          Copy-Item .github/release-notes.md release-notes.md
       - uses: actions/upload-artifact@v4
         with:
           name: MouseFix-Windows
           path: |
             dist/*
             MouseFix-Windows.zip
+            release-notes.md
   release:
     if: startsWith(github.ref, 'refs/tags/v') && github.repository == 'mynameistito/MouseFix'
     needs: build
@@ -53,4 +62,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" artifacts/dist/* artifacts/MouseFix-Windows.zip --verify-tag --generate-notes --title "MouseFix $RELEASE_TAG (community fork)"
+        run: gh release create "$RELEASE_TAG" artifacts/dist/* artifacts/MouseFix-Windows.zip --verify-tag --notes-file artifacts/release-notes.md --title "MouseFix $RELEASE_TAG (community fork)"
